@@ -1,10 +1,10 @@
-import { OpenAI } from "openai"
 import { determineIntent, IntentType } from "@/lib/intent-classifier"
-import { generateBpmnFromDescription, editBpmnFromInstructions, interpretBpmnDiagram } from "@/lib/bpmn-assistant"
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+import {
+  generateBpmnFromDescription,
+  editBpmnFromInstructions,
+  interpretBpmnDiagram,
+  handleConversation,
+} from "@/lib/bpmn-assistant-new"
 
 export async function POST(req: Request) {
   try {
@@ -18,38 +18,17 @@ export async function POST(req: Request) {
       async start(controller) {
         try {
           if (intent === IntentType.CREATE) {
-            // Generate new BPMN diagram
+            // Generate new BPMN diagram using JSON-based approach
             await generateBpmnFromDescription(message, controller, encoder)
           } else if (intent === IntentType.EDIT) {
-            // Edit existing BPMN diagram
+            // Edit existing BPMN diagram using iterative editing
             await editBpmnFromInstructions(message, bpmnXml, controller, encoder)
           } else if (intent === IntentType.INTERPRET) {
             // Interpret existing BPMN diagram
             await interpretBpmnDiagram(bpmnXml, controller, encoder)
           } else {
-            // General conversation
-            const completion = await openai.chat.completions.create({
-              model: "gpt-4",
-              messages: [
-                {
-                  role: "system",
-                  content:
-                    "You are a helpful assistant for BPMN diagram creation and editing. Provide clear and concise responses.",
-                },
-                {
-                  role: "user",
-                  content: message,
-                },
-              ],
-              stream: true,
-            })
-
-            for await (const chunk of completion) {
-              const content = chunk.choices[0]?.delta?.content || ""
-              if (content) {
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content })}\n\n`))
-              }
-            }
+            // General conversation with context awareness
+            await handleConversation(message, bpmnXml, controller, encoder)
           }
 
           controller.enqueue(encoder.encode("data: [DONE]\n\n"))

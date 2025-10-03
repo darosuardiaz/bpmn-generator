@@ -1,8 +1,4 @@
-import { OpenAI } from "openai"
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+import { openaiService } from "@/services/openai-service"
 
 export enum IntentType {
   CREATE = "create",
@@ -25,16 +21,13 @@ Current state: ${hasDiagram ? "A BPMN diagram exists" : "No BPMN diagram exists"
 
 Respond with only the intent type (CREATE, EDIT, INTERPRET, or GENERAL).`
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4",
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: message },
-    ],
-    temperature: 0,
-  })
+  const response = await openaiService.createCompletionWithSystem(
+    systemPrompt,
+    message,
+    { temperature: 0 }
+  )
 
-  const intent = completion.choices[0]?.message?.content?.trim().toUpperCase()
+  const intent = response.trim().toUpperCase()
 
   if (intent === "CREATE") return IntentType.CREATE
   if (intent === "EDIT") return IntentType.EDIT
