@@ -2,12 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import { User, Bot } from "lucide-react"
-
-interface Message {
-  role: "user" | "assistant"
-  content: string
-  isStreaming?: boolean
-}
+import type { Message } from "@/store/chat-store"
 
 interface ChatMessageProps {
   message: Message

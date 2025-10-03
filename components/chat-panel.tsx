@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Send, Loader2 } from "lucide-react"
 import { useBpmnStore } from "@/store/bpmn-store"
+import { useChatStore } from "@/store/chat-store"
 import { ChatMessage } from "./chat-message"
 import { sendChatMessage } from "@/services/chat-service"
 
@@ -15,7 +16,8 @@ export function ChatPanel() {
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
-  const { messages, addMessage, bpmnXml } = useBpmnStore()
+  const { messages, addMessage } = useChatStore()
+  const { bpmnXml } = useBpmnStore()
 
   useEffect(() => {
     if (scrollRef.current) {

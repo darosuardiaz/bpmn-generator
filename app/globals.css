@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
 /* Light theme only - removed all dark mode variables */
 :root {

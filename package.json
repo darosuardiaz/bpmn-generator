@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@radix-ui/react-scroll-area": "latest",
+    "@tailwindcss/postcss": "^4.1.14",
     "@vercel/analytics": "^1.4.1",
     "bpmn-auto-layout": "latest",
     "bpmn-js": "latest",
