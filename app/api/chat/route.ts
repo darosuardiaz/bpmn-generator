@@ -4,7 +4,7 @@ import {
   editBpmnFromInstructions,
   interpretBpmnDiagram,
   handleConversation,
-} from "@/lib/bpmn-assistant-new"
+} from "@/lib/bpmn-assistant"
 
 export async function POST(req: Request) {
   try {
